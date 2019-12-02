@@ -12,10 +12,30 @@ class GameManager {
     var maskedWord = ""
     var playedLetters = mutableListOf<Char>()
 
+    var gameState: GameState = GameState.GameOverWin
+    var tryCount = 0
+
     fun startNewGame(context: Context) {
         word2Guess = generateWord2Guess(context)
         playedLetters.clear()
         maskedWord = getMaskedWordToGuess(word2Guess, playedLetters)
+        tryCount = 0
+        gameState = GameState.Running
+    }
+
+    private fun playLetter(letter: Char) {
+        // Update properties
+        tryCount++
+        playedLetters.add(letter)
+        maskedWord = getMaskedWordToGuess(word2Guess, playedLetters)
+
+        if (tryCount >= 6) {
+            gameState = GameState.GameOverLoose
+        }
+
+        if (!maskedWord.contains('*')) {
+            gameState = GameState.GameOverWin
+        }
     }
 
     private fun generateWord2Guess(context: Context): String {
@@ -35,7 +55,7 @@ class GameManager {
         return wordList[randomIndex].toLowerCase()
     }
 
-    private fun getMaskedWordToGuess(wordToGuess : String, playedLetters : List<Char>) : String{
+    private fun getMaskedWordToGuess(wordToGuess : String, playedLetters : List<Char>) : String {
 
         var maskedWord = ""
         for (letter in wordToGuess){
@@ -48,5 +68,11 @@ class GameManager {
             }
         }
         return maskedWord
+    }
+
+    enum class GameState {
+        Running,
+        GameOverWin,
+        GameOverLoose
     }
 }
