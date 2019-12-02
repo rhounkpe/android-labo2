@@ -9,9 +9,13 @@ import kotlin.random.Random
 
 class GameManager {
     var word2Guess = ""
+    var maskedWord = ""
+    var playedLetters = mutableListOf<Char>()
 
     fun startNewGame(context: Context) {
         word2Guess = generateWord2Guess(context)
+        playedLetters.clear()
+        maskedWord = getMaskedWordToGuess(word2Guess, playedLetters)
     }
 
     private fun generateWord2Guess(context: Context): String {
@@ -29,5 +33,20 @@ class GameManager {
         val randomIndex = Random.nextInt(wordList.count() -1)
 
         return wordList[randomIndex].toLowerCase()
+    }
+
+    private fun getMaskedWordToGuess(wordToGuess : String, playedLetters : List<Char>) : String{
+
+        var maskedWord = ""
+        for (letter in wordToGuess){
+
+            if (playedLetters.contains(letter)){
+                maskedWord += letter
+            }
+            else{
+                maskedWord += '*'
+            }
+        }
+        return maskedWord
     }
 }
