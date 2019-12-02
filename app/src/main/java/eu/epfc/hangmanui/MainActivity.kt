@@ -3,8 +3,10 @@ package eu.epfc.hangmanui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import eu.epfc.hangmanui.model.GameManager
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,14 +34,23 @@ class MainActivity : AppCompatActivity() {
         gameManager.startNewGame(this)
         val maskedWordText: TextView = findViewById(R.id.maskedWord)
         maskedWordText.text = gameManager.maskedWord
+
+        // Update the views representing tryCount
+        updateTryCountViews(gameManager.tryCount)
     }
 
     fun onClickOkButton(view: View) {
-        tryCount++
-        updateTryCountViews()
+        val editText: EditText = findViewById(R.id.editText)
+        val stringEditText = editText.text
+
+        // If the user has entered a letter
+        if (stringEditText.isNotEmpty()) {
+            gameManager.playLetter(stringEditText[0])
+            updateTryCountViews(gameManager.tryCount)
+        }
     }
 
-    private fun updateTryCountViews(){
+    private fun updateTryCountViews(tryCount: Int){
 
         // first rectangles (until tryCount) are opaque
         for (i in 0 until tryCount){

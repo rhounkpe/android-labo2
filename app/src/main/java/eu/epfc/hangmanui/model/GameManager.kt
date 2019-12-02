@@ -23,7 +23,7 @@ class GameManager {
         gameState = GameState.Running
     }
 
-    private fun playLetter(letter: Char) {
+    fun playLetter(letter: Char) {
         // Update properties
         tryCount++
         playedLetters.add(letter)
